@@ -12,6 +12,11 @@
 
 SELECT COUNT(*) AS total_jobs FROM job_postings_fact;
 
+--- count the salary available across all jobs 
+
+SELECT COUNT(*) AS salary_year_avg FROM job_postings_fact
+WHERE salary_year_avg IS NOT NULL;
+
 SELECT 
      EXTRACT(
         YEAR

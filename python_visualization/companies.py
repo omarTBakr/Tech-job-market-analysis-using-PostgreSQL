@@ -1,3 +1,16 @@
+"""
+Companies Analysis Script
+
+This script generates visualizations for company hiring data analysis.
+It creates three main visualizations:
+1. Top 100 companies hiring in machine learning
+2. Top 50 companies hiring across all job categories (stacked bar chart)
+3. ML jobs distribution analysis (top 20 detailed view + histogram)
+
+Input: query_results/companies.csv
+Output: PNG files in report/figures/ directory
+"""
+
 import sys
 from pathlib import Path
 import pandas as pd
@@ -5,6 +18,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import os
+
 
 # Add parent directory to path and set working directory
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -18,15 +32,17 @@ os.makedirs("report/figures/", exist_ok=True)
 plt.style.use("default")
 sns.set_palette("viridis")
 
+# Set high DPI for all figures
+plt.rcParams["figure.dpi"] = 600
+plt.rcParams["savefig.dpi"] = 600
+
 # Read the companies data
 companies_df = pd.read_csv("query_results/companies.csv")
-
-# Load data silently
 
 
 def create_top_ml_companies_plot():
     """Create visualization for top 100 companies hiring in machine learning"""
-
+    
     # Sort companies by machine_learning_jobs and take top 100
     top_ml_companies = companies_df.nlargest(100, "machine_learning_jobs")
 
@@ -75,12 +91,12 @@ def create_top_ml_companies_plot():
 
     # Save with high DPI
     plt.savefig("report/figures/top_100_ml_companies.png", dpi=600, bbox_inches="tight", facecolor="white", edgecolor="none")
-    plt.show()
+    plt.close()
 
 
 def create_top_50_all_jobs_plot():
     """Create visualization for top 50 companies hiring across all job types"""
-
+    
     # Sort companies by total_jobs and take top 50
     top_50_companies = companies_df.nlargest(50, "total_jobs")
 
@@ -146,12 +162,12 @@ def create_top_50_all_jobs_plot():
 
     # Save with high DPI
     plt.savefig("report/figures/top_50_all_jobs_companies.png", dpi=600, bbox_inches="tight", facecolor="white", edgecolor="none")
-    plt.show()
+    plt.close()
 
 
 def create_ml_jobs_distribution_plot():
-    """Create a supplementary plot showing ML jobs distribution"""
-
+    """Create ML jobs distribution analysis with top 20 detailed view and histogram"""
+    
     # Sort companies by machine_learning_jobs and take top 100
     top_ml_companies = companies_df.nlargest(100, "machine_learning_jobs")
 
@@ -189,10 +205,11 @@ def create_ml_jobs_distribution_plot():
 
     plt.tight_layout()
     plt.savefig("report/figures/ml_companies_analysis.png", dpi=600, bbox_inches="tight", facecolor="white", edgecolor="none")
-    plt.show()
+    plt.close()
 
 
 # Execute all visualizations
-create_top_ml_companies_plot()
-create_top_50_all_jobs_plot()
-create_ml_jobs_distribution_plot()
+if __name__ == "__main__":
+    create_top_ml_companies_plot()
+    create_top_50_all_jobs_plot()
+    create_ml_jobs_distribution_plot()

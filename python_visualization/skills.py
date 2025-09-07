@@ -1,3 +1,17 @@
+"""
+Skills Analysis Script
+
+This script creates visualizations for skills analysis across different job titles:
+1. Top 10 individual skills per job title (detailed breakdown)
+2. Skill categories distribution per job title (grouped by skill types)
+
+Input files:
+- query_results/skill.csv (individual skills data)
+- query_results/skill_type.csv (skill categories data)
+
+Output: PNG files in report/figures/ directory
+"""
+
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -5,7 +19,15 @@ import numpy as np
 import os
 import sys
 from pathlib import Path
+
+# Set high DPI for all figures
+plt.rcParams["figure.dpi"] = 600
+plt.rcParams["savefig.dpi"] = 600
+
+
 def main():
+    """Main function to create skills visualizations"""
+    
     # Add parent directory to path and set working directory
     PROJECT_ROOT = Path(__file__).parent.parent
     sys.path.insert(0, str(PROJECT_ROOT))
@@ -56,6 +78,7 @@ def main():
             axes[idx].set_xlabel("Count", fontsize=11, fontweight="bold")
             axes[idx].set_title(f"Top 10 Skills for {job_title}", fontsize=12, fontweight="bold", pad=15)
 
+            # Add value labels on bars
             for i, (bar, count) in enumerate(zip(bars, skill_counts)):
                 axes[idx].text(
                     bar.get_width() + max(skill_counts) * 0.01,
@@ -72,8 +95,9 @@ def main():
             axes[idx].set_xlim(0, max(skill_counts) * 1.15)
 
         plt.tight_layout()
-        plt.savefig("report/figures/top_10_individual_skills.png", dpi=600, bbox_inches="tight", facecolor="white", edgecolor="none")
-        plt.show()
+        plt.savefig("report/figures/top_10_individual_skills.png", dpi=600, bbox_inches="tight", 
+                   facecolor="white", edgecolor="none")
+        plt.close()
 
     def create_skill_types_plot():
         """Create visualization for all skill types per job title"""
@@ -100,12 +124,15 @@ def main():
             type_names = [item[0] for item in type_values]
             type_counts = [item[1] for item in type_values]
 
-            bars = axes[idx].barh(range(len(type_names)), type_counts, color=skill_type_colors[: len(type_names)])
+            bars = axes[idx].barh(range(len(type_names)), type_counts, 
+                                color=skill_type_colors[:len(type_names)])
             axes[idx].set_yticks(range(len(type_names)))
             axes[idx].set_yticklabels(type_names, fontsize=11)
             axes[idx].set_xlabel("Count", fontsize=12, fontweight="bold")
-            axes[idx].set_title(f"Skill Categories Distribution for {job_title}", fontsize=13, fontweight="bold", pad=15)
+            axes[idx].set_title(f"Skill Categories Distribution for {job_title}", 
+                              fontsize=13, fontweight="bold", pad=15)
 
+            # Add value labels on bars
             for i, (bar, count) in enumerate(zip(bars, type_counts)):
                 axes[idx].text(
                     bar.get_width() + max(type_counts) * 0.01,
@@ -122,12 +149,14 @@ def main():
             axes[idx].set_xlim(0, max(type_counts) * 1.12)
 
         plt.tight_layout()
-        plt.savefig("report/figures/skill_types_distribution.png", dpi=600, bbox_inches="tight", facecolor="white", edgecolor="none")
-        plt.show()
+        plt.savefig("report/figures/skill_types_distribution.png", dpi=600, bbox_inches="tight", 
+                   facecolor="white", edgecolor="none")
+        plt.close()
 
     # Create both visualizations
     create_individual_skills_plot()
     create_skill_types_plot()
+
 
 if __name__ == "__main__":
     main()
